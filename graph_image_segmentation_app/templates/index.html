@@ -1,41 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <title>Image Segmentation</title>
+  <style>
+    body {
+      font-family: "Century Gothic", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: rgba(184, 182, 182, 0.25);
+      padding: 10px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+
+    .navbar-brand {
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: -1;
+      background-image: url('https://mdbcdn.b-cdn.net/img/Photos/Others/images/76.webp');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .container {
+      margin-top: 150px;
+      padding-bottom: 50px;
+      /* Added padding to create space at the bottom */
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+      margin-top: -50px;
+    }
+
+    .form-group label{
+      font-size: 25px;
+    }
+    .btn-primary {
+      font-size: 20px;
+      background-color: #000000;
+    }
+
+    #converting {
+      display: none;
+      margin-top: 30px;
+      /* Adjusted margin to lower the "Converting..." message */
+    }
+
+    #segmentedImage img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #segmentedImage{
+      margin-top: 10px;
+    }
+
+    #downloadBtn {
+      display: none;
+      margin-top: 20px;
+      background-color: black;
+      /* Adjusted margin to create space below the segmented image */
+    }
+
+    .card {
+      border-radius: 10px;
+      overflow: hidden;
+      opacity: 80%;
+    }
+
+
+  </style>
 </head>
+
 <body>
+  
+  <div class="bg-image"></div>
+
   <div class="container mt-5">
-    <h1 class="mb-4">Image Segmentation</h1>
+    <div class="opacity-35">
+      <h1 class="mb-4" style="font-size: 50pt;">IMAGE SEGMENTATION</h1>
+    </div>
     <form id="uploadForm" enctype="multipart/form-data" method="POST">
       {% csrf_token %} <!-- Add the CSRF token inside the form -->
       <div class="form-group">
-        <label for="imageUpload">Choose an image file:</label>
-        <input type="file" class="form-control-file" id="imageUpload" name="imageUpload">
+        <label for="imageUpload"><b>Choose an image file:</b></label>
+        <input type="file" class="form-control-file" id="imageUpload" name="imageUpload" style="font-size: 20px;">
       </div>
-      <button type="submit" class="btn btn-primary">Convert</button>
-    </form> 
-    <div id="converting" style="display:none;">
+        <button type="submit" class="btn btn-primary">CONVERT</button>
+    </form>
+    <div id="converting">
       <div class="text-center">
         <div class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>
         </div>
         <div>Converting...</div>
       </div>
-    </div>   
+    </div>
     <hr>
     <div id="segmentedImage" class="mt-4"></div>
-      <a id="downloadBtn" class="btn btn-success mt-3" href="#" download = "" style="display: none;">Download Segmented Image</a>
+    <div style="margin-top: 20px;">
+      <a id="downloadBtn" class="btn btn-success my-5" href="#" download="" style="font-size: 20px;">DOWNLOAD SEGMENTED IMAGE</a>
     </div>
+    
+  </div>
+
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-body" style="background-color: black; color: #fff;">
+        <h5 class="card-title"><b>How it works:</b></h5>
+        <p class="card-text">Image segmentation is the process of partitioning an image into multiple segments or
+          regions, where each region corresponds to a separate object or part of the image. The program creates
+          boundaries that satisfy global properties and specifies certain conditions for evaluating the evidence of a
+          boundary between two sections. This app has been implemented using Python for the algorithm and Django
+          framework for building the web app.</p>
+        <h5 class="card-title"><b>Instructions:</b></h5>
+        <ul>
+          <li>Click 'Choose File' to upload an image of your choice from your device.</li>
+          <li>Once uploaded, click 'Convert' to segment the given input image.</li>
+          <li>The segmented image will be displayed on the screen.</li>
+          <li>Click 'Download Image' to download the segmented image to your device.</li>
+        </ul>
+        <p><b>Authors:</b> Aditya Harish, Gaurav Prakash, Ronith R Nair, Srihari M, Varun Iyer</p>
+      </div>
+    </div>
+  </div>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-      $('#uploadForm').submit(function(e) {
+      $('#uploadForm').submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
 
@@ -48,20 +166,21 @@
           cache: false,
           contentType: false,
           processData: false,
-          success: function(response) {
+          success: function (response) {
             console.log(response.segmentedImagePath);
             $('#converting').hide();
             $('#segmentedImage').html('<img src="' + response.segmentedImagePath + '" class="img-fluid">');
             $('#downloadBtn').attr('href', response.segmentedImagePath);
             $('#downloadBtn').show();
           },
-          error: function(error) {
+          error: function (error) {
             $('#converting').hide();
             console.log('Error:', error);
           }
         });
       });
     });
-</script>
+  </script>
 </body>
+
 </html>
