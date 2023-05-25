@@ -21,13 +21,14 @@ def upload(request):
         
         # Save the uploaded file
         image_file = request.FILES['imageUpload']
-        image_path = init_save_path+"/assets/"+image_file.name
+        print(type(image_file))
+        # image_path = init_save_path+"/assets/"+image_file.name
         
         # print("Uploaded Image file: ",image_file)
         # print("Uploaded Image path: ",image_path)
         
         # # Perform segmentation using main.py
-        segmented_image_path = init_save_path+"/uploads/"+"seg_"+image_file.name
+        segmented_image_path = os.getcwd()+"/static/uploads/"+"seg_"+image_file.name
         print("Segmented image path: " , segmented_image_path)
         
         #subprocess.call(['python', 'get_segmented_image', image_path, segmented_image_path])
@@ -42,10 +43,10 @@ def upload(request):
         '''
         
         #Calling get_segmented_image function from main.py for segmentation 
-        get_segmented_image(params['sigma'], params['nbd'], params['min_comp_size'],params['k'], image_path, segmented_image_path)
+        get_segmented_image(params['sigma'], params['nbd'], params['min_comp_size'],params['k'], image_file, segmented_image_path)
 
         # Return the path to the segmented image
-        return JsonResponse({'segmentedImagePath': segmented_image_path})
+        return JsonResponse({'segmentedImagePath': "/static/uploads/seg_"+image_file.name})
 
     return JsonResponse({'error': 'Invalid request'})
 
