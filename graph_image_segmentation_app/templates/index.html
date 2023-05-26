@@ -79,6 +79,11 @@
       margin-top: 10px;
     }
 
+    #logo {
+      display: flexbox;
+      border-radius: 20px;
+    }
+
     #downloadBtn {
       display: none;
       margin-top: 20px;
@@ -101,9 +106,15 @@
   <div class="bg-image"></div>
 
   <div class="container mt-5">
-    <div class="opacity-35">
-      <h1 class="mb-4" style="font-size: 50pt;">IMAGE SEGMENTATION</h1>
+    <div class="d-flex align-items-start justify-content-start mb-4">
+      <div id="logo">
+        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHBeMRKPLtyyfG3LtxVrilo__dU5tAIfgOou91aU448R6o0KCJ" style="border-radius: 50%; width: 100px; height: 100px;" alt="logo">
+      </div>
+      <div class="opacity-35">
+        <h1 class=" mt-3 mb-4 ml-3 d-flex align-items-center" style="font-size: 50pt; align-items: center; color: #000000;">IMAGE SEGMENTATION</h1>
+      </div>
     </div>
+  
     <form id="uploadForm" enctype="multipart/form-data" method="POST">
       {% csrf_token %} <!-- Add the CSRF token inside the form -->
       <div class="form-group">
@@ -128,7 +139,7 @@
     
   </div>
 
-  <div class="container mt-5">
+  <div class="container" style = "margin-top:0px;">
     <div class="card">
       <div class="card-body" style="background-color: black; color: #fff;">
         <h5 class="card-title"><b>How it works:</b></h5>
