@@ -1,11 +1,11 @@
 # Graph Based Image Segmentation Web App
-Application of the graph-based image segmentation algorithm using Python and Django as described in the research paper: ["Efficient Graph-Based Image Segmentation"](https://cs.brown.edu/people/pfelzens/papers/seg-ijcv.pdf).  
+Application of the graph-based image segmentation algorithm using Python and Django as described in the research paper: [Efficient Graph-Based Image Segmentation](https://cs.brown.edu/people/pfelzens/papers/seg-ijcv.pdf).  
 ## Instructions:
--Enter `python manage.py runserver` in the terminal to run the website.
--Click 'Choose File' to upload an image of your choice from your device.
--Once uploaded, click 'Convert' to segment the given input image.
--The segmented image will be displayed on the screen.
--Click 'Download Image' to download the segmented image to your device.
+* Enter `python manage.py runserver` in the terminal to run the website.
+* Click 'Choose File' to upload an image of your choice from your device.
+* Once uploaded, click 'Convert' to segment the given input image.
+* The segmented image will be displayed on the screen.
+* Click 'Download Image' to download the segmented image to your device.
 ## Results:
 Before:
 
