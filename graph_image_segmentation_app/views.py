@@ -33,7 +33,7 @@ def upload(request):
         
         #subprocess.call(['python', 'get_segmented_image', image_path, segmented_image_path])
         
-        params = {'sigma':0.8, 'nbd':8, 'min_comp_size':2000, 'k':300} #default value of parameters
+        params = {'sigma':1, 'nbd':8, 'min_comp_size':2000, 'k':100} # value of parameters
         
         ''' 
         sigma: Gaussian blur constant
