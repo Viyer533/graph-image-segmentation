@@ -59,27 +59,3 @@ def get_segmented_image(sigma, neighbor, K, min_comp_size, input_file, output_fi
     logger.info('Total running time: {:0.4}s'.format(time.time() - start_time))
 
 
-if __name__ == '__main__':
-    # argument parser
-    parser = argparse.ArgumentParser(description='Graph-based Segmentation')
-    parser.add_argument('--sigma', type=float, default=1.0, 
-                        help='a float for the Gaussin Filter')
-    parser.add_argument('--neighbor', type=int, default=8, choices=[4, 8],
-                        help='choose the neighborhood format, 4 or 8')
-    parser.add_argument('--K', type=float, default=10.0, 
-                        help='a constant to control the threshold function of the predicate')
-    parser.add_argument('--min-comp-size', type=int, default=2000, 
-                        help='a constant to remove all the components with fewer number of pixels')
-    parser.add_argument('--input-file', type=str, default="./assets/seg_test.jpg", 
-                        help='the file path of the input image')
-    parser.add_argument('--output-file', type=str, default="./assets/seg_test_out.jpg", 
-                        help='the file path of the output image')
-    args = parser.parse_args()
-
-    # basic logging settings
-    logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%m-%d %H:%M')
-    logger = logging.getLogger(__name__)
-
-    get_segmented_image(args.sigma, args.neighbor, args.K, args.min_comp_size, args.input_file, args.output_file)
