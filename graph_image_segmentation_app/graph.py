@@ -5,9 +5,10 @@ class Node:
         self.size = size
 
     def __repr__(self):
-        return '(parent=%s, rank=%s, size=%s)' % (self.parent, self.rank, self.size)
+        return "(parent=%s, rank=%s, size=%s)" % (self.parent, self.rank, self.size)
 
-class Forest:
+
+class Disjoint_set:
     def __init__(self, num_nodes):
         self.nodes = [Node(i) for i in range(num_nodes)]
         self.num_sets = num_nodes
@@ -23,7 +24,7 @@ class Forest:
         self.nodes[n].parent = temp
         return temp
 
-    def merge(self, a, b):
+    def union(self, a, b):
         if self.nodes[a].rank > self.nodes[b].rank:
             self.nodes[b].parent = a
             self.nodes[a].size = self.nodes[a].size + self.nodes[b].size
@@ -40,29 +41,36 @@ class Forest:
         for node in self.nodes:
             print(node)
 
+
 def create_edge(img, width, x, y, x1, y1, diff):
     vertex_id = lambda x, y: y * width + x
     w = diff(img, x, y, x1, y1)
     return (vertex_id(x, y), vertex_id(x1, y1), w)
+
 
 def build_graph(img, width, height, diff, neighborhood_8=False):
     graph_edges = []
     for y in range(height):
         for x in range(width):
             if x > 0:
-                graph_edges.append(create_edge(img, width, x, y, x-1, y, diff))
+                graph_edges.append(create_edge(img, width, x, y, x - 1, y, diff))
 
             if y > 0:
-                graph_edges.append(create_edge(img, width, x, y, x, y-1, diff))
+                graph_edges.append(create_edge(img, width, x, y, x, y - 1, diff))
 
             if neighborhood_8:
                 if x > 0 and y > 0:
-                    graph_edges.append(create_edge(img, width, x, y, x-1, y-1, diff))
+                    graph_edges.append(
+                        create_edge(img, width, x, y, x - 1, y - 1, diff)
+                    )
 
-                if x > 0 and y < height-1:
-                    graph_edges.append(create_edge(img, width, x, y, x-1, y+1, diff))
+                if x > 0 and y < height - 1:
+                    graph_edges.append(
+                        create_edge(img, width, x, y, x - 1, y + 1, diff)
+                    )
 
     return graph_edges
+
 
 def remove_small_components(forest, graph, min_size):
     for edge in graph:
@@ -70,16 +78,17 @@ def remove_small_components(forest, graph, min_size):
         b = forest.find(edge[1])
 
         if a != b and (forest.size_of(a) < min_size or forest.size_of(b) < min_size):
-            forest.merge(a, b)
+            forest.union(a, b)
 
-    return  forest
+    return forest
+
 
 def segment_graph(graph_edges, num_nodes, const, min_size, threshold_func):
     # Step 1: initialization
-    forest = Forest(num_nodes)
+    forest = Disjoint_set(num_nodes)
     weight = lambda edge: edge[2]
     sorted_graph = sorted(graph_edges, key=weight)
-    threshold = [ threshold_func(1, const) for _ in range(num_nodes) ]
+    threshold = [threshold_func(1, const) for _ in range(num_nodes)]
 
     # Step 2: merging
     for edge in sorted_graph:
@@ -89,7 +98,7 @@ def segment_graph(graph_edges, num_nodes, const, min_size, threshold_func):
         b_condition = weight(edge) <= threshold[parent_b]
 
         if parent_a != parent_b and a_condition and b_condition:
-            forest.merge(parent_a, parent_b)
+            forest.union(parent_a, parent_b)
             a = forest.find(parent_a)
             threshold[a] = weight(edge) + threshold_func(forest.nodes[a].size, const)
 
